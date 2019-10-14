@@ -1,0 +1,22 @@
+{
+  "name": "web-films",
+  "version": "0.0.1",
+  "description": "The web app for my SH project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/villekuosmanen/WebAppSHProject.git"
+  },
+  "author": "Ville Kuosmanen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/villekuosmanen/WebAppSHProject/issues"
+  },
+  "homepage": "https://github.com/villekuosmanen/WebAppSHProject#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
