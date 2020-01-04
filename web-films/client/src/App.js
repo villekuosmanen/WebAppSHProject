@@ -1,38 +1,37 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import StartView from './StartView';
+import RateMoviesView from './RateMoviesView';
+import RecommendationsView from './RecommendationsView';
+import EndView from './EndView';
 
 class App extends Component {
 
-    state = {
-        recommendations: [],
-    };
-
-    componentDidMount() {
-        this.callApi()
-            .then(res => this.setState({ recommendations: res }))
-            .catch(err => console.log(err));
+    constructor(props) {
+        super(props);
+        this.state = {
+            view: 0,
+        };
     }
 
-    callApi = async () => {
-        const response = await fetch('/recommendations/445');
-        const body = await response.json();
-        console.log(body.recommendations)
-        if (response.status !== 200) throw Error(body.message);
-
-        return body.recommendations;
-    };
+    advanceView = () => {
+        this.setState({view: this.state.view + 1});
+    }
 
     render() {
-        const elementsList = this.state.recommendations.map((rec) => 
-            <div>
-                <span>{rec.movieId}</span>
-                <span>{rec.title}</span>
-            </div>
-        );
+        let viewElement;
+        if (this.state.view === 0) {
+            viewElement = <StartView advanceView={this.advanceView} />
+        } else if (this.state.view === 1) {
+            viewElement = <RateMoviesView advanceView={this.advanceView} />
+        } else if (this.state.view === 2) {
+            viewElement = <RecommendationsView advanceView={this.advanceView} />
+        } else if (this.state.view === 3) {
+            viewElement = <EndView/>
+        }
         return (
             <div className="App">
-                {elementsList}
+                {viewElement}
             </div>
         );
     }
