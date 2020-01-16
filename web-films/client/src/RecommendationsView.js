@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import StarRatingComponent from 'react-star-rating-component';
+
 import './App.css';
 
 class RecommendationsView extends Component {
@@ -7,17 +9,21 @@ class RecommendationsView extends Component {
         super(props);
         this.state = {
             recommendations: [],
+            responses: [],
+            currentRecommendation: -1,
+            interest: 0,
+            trust: 0,
         };
     }
 
     componentDidMount() {
-        this.callApi()
-            .then(res => this.setState({ recommendations: res }))
+        this.getRecommendations()
+            .then(res => this.setState({ recommendations: res, currentRecommendation: 0 }))
             .catch(err => console.log(err));
     }
     
-    callApi = async () => {
-        const response = await fetch('/recommendations/445');
+    getRecommendations = async () => {
+        const response = await fetch('/recommendations/445/recommendations');
         const body = await response.json();
         console.log(body.recommendations)
         if (response.status !== 200) throw Error(body.message);
@@ -25,17 +31,67 @@ class RecommendationsView extends Component {
         return body.recommendations;
     };
 
+    rateFilm = () => {
+        this.state.responses.push({interest: this.state.interest, trust: this.state.trust});
+        if (this.state.currentRecommendation === this.state.recommendations.length - 1) {
+            this.sendDataToServer()
+                .then(() => this.props.advanceView());
+        } else {
+            this.setState({currentRecommendation: this.state.currentRecommendation + 1, interest: 0, trust: 0});
+        }
+    };
+
+    sendDataToServer = async () => {
+        const response = await fetch('/recommendations/445/responses', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({response: this.state.responses}),
+        });
+        if (response.status !== 200) throw Error("Post failed");
+    }
+
     render() {
-        const elementsList = this.state.recommendations.map((rec) => 
-            <div>
+        let mainComponent = null;
+        if (this.state.currentRecommendation === -1) {
+            mainComponent = <div>Loading...</div>;
+        } else {
+            const rec = this.state.recommendations[this.state.currentRecommendation];
+            mainComponent = <div>
                 <span>{rec.movieId}</span>
                 <span>{rec.title}</span>
-            </div>
-        );
+            </div>;
+        }
         return (
             <div className="App">
-                {elementsList}
-                <button onClick={this.props.advanceView}>Continue</button>
+                {mainComponent}
+                <div>
+                    <span>I am interested in watching this film: </span>
+                    <StarRatingComponent
+                        name={"Interest"}
+                        value={this.state.interest}
+                        starCount={5}
+                        onStarClick={(nextValue, prevValue, name) => {
+                            this.setState({interest: nextValue})
+                        }}
+                    />
+                </div>
+                <div>
+                    <span>I trust this recommendation: </span>
+                    <StarRatingComponent
+                        name={"Trust"}
+                        value={this.state.trust}
+                        starCount={5}
+                        onStarClick={(nextValue, prevValue, name) => {
+                            this.setState({trust: nextValue})
+                        }}
+                    />
+                </div>
+                {this.state.interest !== 0 && this.state.trust !== 0
+                    ? <button onClick={this.rateFilm}>Continue</button> 
+                    : <div />
+                }
             </div>
         );
     }
