@@ -66,28 +66,31 @@ class RecommendationsView extends Component {
         return (
             <div className="App">
                 {mainComponent}
-                <div>
-                    <span>I am interested in watching this film: </span>
-                    <StarRatingComponent
-                        name={"Interest"}
-                        value={this.state.interest}
-                        starCount={5}
-                        onStarClick={(nextValue, prevValue, name) => {
-                            this.setState({interest: nextValue})
-                        }}
-                    />
-                </div>
-                <div>
-                    <span>I trust this recommendation: </span>
-                    <StarRatingComponent
-                        name={"Trust"}
-                        value={this.state.trust}
-                        starCount={5}
-                        onStarClick={(nextValue, prevValue, name) => {
-                            this.setState({trust: nextValue})
-                        }}
-                    />
-                </div>
+                {this.state.currentRecommendation === -1
+                    ? <div />
+                    : <div><div>
+                        <span>I am interested in watching this film: </span>
+                        <StarRatingComponent
+                            name={"Interest"}
+                            value={this.state.interest}
+                            starCount={5}
+                            onStarClick={(nextValue, prevValue, name) => {
+                                this.setState({interest: nextValue})
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <span>I trust this recommendation: </span>
+                        <StarRatingComponent
+                            name={"Trust"}
+                            value={this.state.trust}
+                            starCount={5}
+                            onStarClick={(nextValue, prevValue, name) => {
+                                this.setState({trust: nextValue})
+                            }}
+                        />
+                    </div>
+                </div>}
                 {this.state.interest !== 0 && this.state.trust !== 0
                     ? <button onClick={this.rateFilm}>Continue</button> 
                     : <div />
