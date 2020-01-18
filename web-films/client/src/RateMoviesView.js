@@ -108,6 +108,22 @@ class RateMoviesView extends Component {
         });
     }
 
+    submitRatings = () => {
+        this.sendDataToServer()
+            .then(() => this.props.advanceView());
+    }
+
+    sendDataToServer = async () => {
+        const response = await fetch('/movies/445/responses', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({response: this.state.ratedMovies}),
+        });
+        if (response.status !== 200) throw Error("Post failed");
+    }
+
     render() { 
         // Autosuggest will pass through all these props to the input.
         const inputProps = {
@@ -168,7 +184,7 @@ class RateMoviesView extends Component {
                     inputProps={inputProps}
                 />
                 {rateMovieElement}
-                <button onClick={this.props.advanceView}>Finish</button>
+                <button onClick={this.submitRatings}>Finish</button>
                 {ratedMoviesList}
             </div>
         );
