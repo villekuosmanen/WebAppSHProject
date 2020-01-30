@@ -23,7 +23,7 @@ class RecommendationsView extends Component {
     }
     
     getRecommendations = async () => {
-        const response = await fetch('/recommendations/445/recommendations');
+        const response = await fetch(`/recommendations/${this.props.userId}/recommendations`);
         const body = await response.json();
         console.log(body.recommendations)
         if (response.status !== 200) throw Error(body.message);
@@ -42,7 +42,7 @@ class RecommendationsView extends Component {
     };
 
     sendDataToServer = async () => {
-        const response = await fetch('/recommendations/445/responses', {
+        const response = await fetch(`/recommendations/${this.props.userId}/responses`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

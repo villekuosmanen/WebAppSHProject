@@ -9,8 +9,11 @@ class App extends Component {
 
     constructor(props) {
         super(props);
+        // TODO get this from back-end
+        const userId = 19546801
         this.state = {
             view: 0,
+            userId: userId,
         };
     }
 
@@ -23,9 +26,9 @@ class App extends Component {
         if (this.state.view === 0) {
             viewElement = <StartView advanceView={this.advanceView} />
         } else if (this.state.view === 1) {
-            viewElement = <RateMoviesView advanceView={this.advanceView} />
+            viewElement = <RateMoviesView advanceView={this.advanceView} userId={this.state.userId} />
         } else if (this.state.view === 2) {
-            viewElement = <RecommendationsView advanceView={this.advanceView} />
+            viewElement = <RecommendationsView advanceView={this.advanceView} userId={this.state.userId} />
         } else if (this.state.view === 3) {
             viewElement = <EndView/>
         }

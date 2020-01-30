@@ -114,7 +114,7 @@ class RateMoviesView extends Component {
     }
 
     sendDataToServer = async () => {
-        const response = await fetch('/movies/445/responses', {
+        const response = await fetch(`/movies/${this.props.userId}/responses`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
