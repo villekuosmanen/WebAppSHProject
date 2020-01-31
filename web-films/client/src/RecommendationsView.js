@@ -54,6 +54,7 @@ class RecommendationsView extends Component {
 
     render() {
         let mainComponent = null;
+        let explanation = null;
         if (this.state.currentRecommendation === -1) {
             mainComponent = <div>Loading...</div>;
         } else {
@@ -62,10 +63,22 @@ class RecommendationsView extends Component {
                 <span>{rec.movieId}</span>
                 <span>{rec.title}</span>
             </div>;
+            
+            if ('explanation' in rec) {
+                explanation = <div>
+                    <div>This film was recommended because you have rated the following films:</div>
+                    <div>
+                        {rec.explanation.map(obj => <div>{obj.title}</div>)}
+                    </div>
+                </div>
+            } else {
+                explanation = <div>This film was recommended because you are similar to users who liked it.</div>;
+            }
         }
         return (
             <div className="App">
                 {mainComponent}
+                {explanation}
                 {this.state.currentRecommendation === -1
                     ? <div />
                     : <div><div>
