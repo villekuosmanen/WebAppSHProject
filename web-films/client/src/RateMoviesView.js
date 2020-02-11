@@ -14,7 +14,8 @@ class RateMoviesView extends Component {
             suggestions: [],
             ratedMovies: [],
             selection: null,
-            availableMovies: []
+            availableMovies: [],
+            loading: false
         };
     }
 
@@ -109,6 +110,7 @@ class RateMoviesView extends Component {
     }
 
     submitRatings = () => {
+        this.setState({loading: true});
         this.sendDataToServer()
             .then(() => this.props.advanceView());
     }
@@ -172,21 +174,23 @@ class RateMoviesView extends Component {
         );
 
         return (
-            <div>
-                <div>Here, you can rate the movies you've seen lately</div>
-                <Autosuggest
-                    suggestions={this.state.suggestions}
-                    onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-                    onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-                    getSuggestionValue={this.getSuggestionValue}
-                    onSuggestionSelected={this.onSuggestionSelected}
-                    renderSuggestion={this.renderSuggestion}
-                    inputProps={inputProps}
-                />
-                {rateMovieElement}
-                <button onClick={this.submitRatings}>Finish</button>
-                {ratedMoviesList}
-            </div>
+            !this.state.loading ?
+                <div>
+                    <div>Here, you can rate the movies you've seen lately</div>
+                    <Autosuggest
+                        suggestions={this.state.suggestions}
+                        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                        getSuggestionValue={this.getSuggestionValue}
+                        onSuggestionSelected={this.onSuggestionSelected}
+                        renderSuggestion={this.renderSuggestion}
+                        inputProps={inputProps}
+                    />
+                    {rateMovieElement}
+                    <button onClick={this.submitRatings}>Finish</button>
+                    {ratedMoviesList}
+                </div>  :
+                <div>Loading...</div>            
         );
     }
 }
