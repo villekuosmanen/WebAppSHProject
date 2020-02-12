@@ -3,6 +3,8 @@ import Autosuggest from 'react-autosuggest';
 import StarRatingComponent from 'react-star-rating-component';
 import Button from 'react-bootstrap/Button';
 
+import RateMovie from './RateMovie';
+import MovieInformation from './MovieInformation';
 import './App.css';
 
 class RateMoviesView extends Component {
@@ -36,17 +38,12 @@ class RateMoviesView extends Component {
     };
 
     getMovieDetails = async (movieId) => {
-        // const response = await fetch(`/movies/details/${movieId}`);
-        // const body = await response.json();
-        // console.log(body.details)
-        // if (response.status !== 200) throw Error(body.message);
+        const response = await fetch(`/movies/details/${movieId}`);
+        const body = await response.json();
+        console.log(body.details)
+        if (response.status !== 200) throw Error(body.message);
     
-        // return body.details;
-        return {
-            poster: "...",
-            description: "This is a description of the movie",
-            ageRating: "15",
-        };
+        return body;
     };
 
     getSuggestions = value => {
@@ -97,12 +94,12 @@ class RateMoviesView extends Component {
                 selection: suggestion
             });
             this.getMovieDetails(suggestion.key)
-                .then(res => this.setState(prevState => ({ selection: {
-                    ...prevState.selection,
+                .then(res => this.setState({ selection: {
+                    ...this.state.selection,
                     description: res.description,
-                    poster: res.poster,
-                    ageRating: res.ageRating,
-                }})))
+                    poster_path: res.poster_path,
+                    ageRating: res.age_rating,
+                }}))
                 .catch(err => console.log(err));
         } else {
             this.setState({
@@ -164,45 +161,45 @@ class RateMoviesView extends Component {
             suggestionHighlighted: 'react-autosuggest__suggestion--highlighted',
         };
 
-        let rateMovieElement = null;
+        let movieInformation = null;
+        let rateMovie = null;
         if (this.state.selection !== null) {
-            rateMovieElement = <div class="container">
-                <div class="row">
-                    <div className="col">
-                        <img src={this.state.selection.poster} />
-                        <div className="movie-age-rating">{this.state.selection.ageRating}</div>
+            if ((this.state.selection.ageRating === "18" || this.state.selection.ageRating === "R18")
+                && !this.props.adultMovies) {
+                movieInformation = <div class="container">
+                    <div class="row">
+                        <div className="col">
+                            <img src={'...'} alt={"No poster shown"} />
+                            <div className="movie-age-rating">{this.state.selection.ageRating}</div>
+                        </div>
+                        <div className="col-8">
+                            <div className="movie-title">{this.state.selection.title}</div>
+                            <div className="movie-description">
+                                This film is rated 18 or R18, and has been hidden due to your expressed preferences.
+                            </div>
+                        </div>
                     </div>
-                    <div className="col-8">
-                        <div className="movie-title">{this.state.selection.title}</div>
-                        <div className="movie-description">{this.state.selection.description}</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div className="col">My rating: </div>
-                    <div className="col">
-                        <StarRatingComponent
-                            name={"Rating"}
-                            value={this.state.selection.rating}
-                            starCount={5}
-                            onStarClick={(nextValue, prevValue, name) => {
-                                this.setState({
-                                    selection: {
-                                        ...this.state.selection,
-                                        rating: nextValue
-                                    }
-                                })
-                            }}
-                        />
-                    </div>
-                </div>
-                <div class="row">
-                    <div className="col">
-                        {this.state.selection.rating !== 0
-                            ? <Button onClick={this.rateFilm}>Confirm</Button> 
-                            : <span />}
-                    </div>
-                </div>
-            </div>;
+                </div>;
+            } else {
+                movieInformation = <MovieInformation
+                    title={this.state.selection.title}
+                    description={this.state.selection.description}
+                    ageRating={this.state.selection.ageRating}
+                    poster_path={this.state.selection.poster_path}
+                />;
+                rateMovie = <RateMovie 
+                    rating={this.state.selection.rating}
+                    rateFilm={this.rateFilm}
+                    onRatingChange={(nextValue, prevValue, name) => {
+                        this.setState({
+                            selection: {
+                                ...this.state.selection,
+                                rating: nextValue
+                            }
+                        })
+                    }}
+                />;
+            }
         }
 
         const ratedMoviesList = this.state.ratedMovies.map((movie, index) => 
@@ -232,7 +229,8 @@ class RateMoviesView extends Component {
                         inputProps={inputProps}
                         theme={theme}
                     />
-                    {rateMovieElement}
+                    {movieInformation}
+                    {rateMovie}
                     <Button onClick={this.submitRatings}>Finish</Button>
                     {ratedMoviesList}
                 </div>  :

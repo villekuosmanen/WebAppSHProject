@@ -14,6 +14,7 @@ class App extends Component {
         this.state = {
             view: 0,
             userId: userId,
+            adultMovies: true,
         };
     }
 
@@ -21,14 +22,21 @@ class App extends Component {
         this.setState({view: this.state.view + 1});
     }
 
+    toggleAdultMovies = () => {
+        this.setState({adultMovies: !this.state.adultMovies});
+    }
+
     render() {
         let viewElement;
         if (this.state.view === 0) {
-            viewElement = <StartView advanceView={this.advanceView} />
+            viewElement = <StartView advanceView={this.advanceView} adultMovies={this.state.adultMovies} 
+                toggleAdultMovies={this.toggleAdultMovies} />
         } else if (this.state.view === 1) {
-            viewElement = <RateMoviesView advanceView={this.advanceView} userId={this.state.userId} />
+            viewElement = <RateMoviesView advanceView={this.advanceView} userId={this.state.userId}
+                adultMovies={this.state.adultMovies} />
         } else if (this.state.view === 2) {
-            viewElement = <RecommendationsView advanceView={this.advanceView} userId={this.state.userId} />
+            viewElement = <RecommendationsView advanceView={this.advanceView} 
+                userId={this.state.userId} adultMovies={this.state.adultMovies} />
         } else if (this.state.view === 3) {
             viewElement = <EndView/>
         }
