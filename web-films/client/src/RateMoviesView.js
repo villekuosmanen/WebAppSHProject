@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Autosuggest from 'react-autosuggest';
 import StarRatingComponent from 'react-star-rating-component';
+import Button from 'react-bootstrap/Button';
 
 import './App.css';
 
@@ -34,6 +35,20 @@ class RateMoviesView extends Component {
         return body.movies;
     };
 
+    getMovieDetails = async (movieId) => {
+        // const response = await fetch(`/movies/details/${movieId}`);
+        // const body = await response.json();
+        // console.log(body.details)
+        // if (response.status !== 200) throw Error(body.message);
+    
+        // return body.details;
+        return {
+            poster: "...",
+            description: "This is a description of the movie",
+            ageRating: "15",
+        };
+    };
+
     getSuggestions = value => {
         const inputValue = value.trim().toLowerCase();
         const inputLength = inputValue.length;
@@ -45,7 +60,6 @@ class RateMoviesView extends Component {
 
     getSuggestionValue = suggestion => suggestion.title;
  
-    // Use your imagination to render suggestions.
     renderSuggestion = suggestion => (
         <div>
             {suggestion.title}
@@ -82,6 +96,14 @@ class RateMoviesView extends Component {
             this.setState({
                 selection: suggestion
             });
+            this.getMovieDetails(suggestion.key)
+                .then(res => this.setState(prevState => ({ selection: {
+                    ...prevState.selection,
+                    description: res.description,
+                    poster: res.poster,
+                    ageRating: res.ageRating,
+                }})))
+                .catch(err => console.log(err));
         } else {
             this.setState({
                 selection: previouslyRated[0]
@@ -133,29 +155,52 @@ class RateMoviesView extends Component {
             value: this.state.value,
             onChange: this.onChange
         };
+        const theme = {
+            container: 'autosuggest',
+            input: 'react-autosuggest__input',
+            suggestionsContainer: 'react-autosuggest__suggestions-container',
+            suggestionsList: `dropdown-menu ${this.state.suggestions.length ? 'show' : ''}`,
+            suggestion: 'react-autosuggest__suggestion',
+            suggestionHighlighted: 'react-autosuggest__suggestion--highlighted',
+        };
 
         let rateMovieElement = null;
         if (this.state.selection !== null) {
-            rateMovieElement = <div>
-                <div>{this.state.selection.title}</div>
-                <div>
-                    <span>My rating: </span>
-                    <StarRatingComponent
-                        name={"Rating"}
-                        value={this.state.selection.rating}
-                        starCount={5}
-                        onStarClick={(nextValue, prevValue, name) => {
-                            this.setState({
-                                selection: {
-                                    ...this.state.selection,
-                                    rating: nextValue
-                                }
-                            })
-                        }}
-                    />
-                    {this.state.selection.rating !== 0
-                    ? <button onClick={this.rateFilm}>Confirm</button> 
-                    : <span />}
+            rateMovieElement = <div class="container">
+                <div class="row">
+                    <div className="col">
+                        <img src={this.state.selection.poster} />
+                        <div className="movie-age-rating">{this.state.selection.ageRating}</div>
+                    </div>
+                    <div className="col-8">
+                        <div className="movie-title">{this.state.selection.title}</div>
+                        <div className="movie-description">{this.state.selection.description}</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div className="col">My rating: </div>
+                    <div className="col">
+                        <StarRatingComponent
+                            name={"Rating"}
+                            value={this.state.selection.rating}
+                            starCount={5}
+                            onStarClick={(nextValue, prevValue, name) => {
+                                this.setState({
+                                    selection: {
+                                        ...this.state.selection,
+                                        rating: nextValue
+                                    }
+                                })
+                            }}
+                        />
+                    </div>
+                </div>
+                <div class="row">
+                    <div className="col">
+                        {this.state.selection.rating !== 0
+                            ? <Button onClick={this.rateFilm}>Confirm</Button> 
+                            : <span />}
+                    </div>
                 </div>
             </div>;
         }
@@ -169,7 +214,7 @@ class RateMoviesView extends Component {
                         starCount={5}
                         editing={false}
                     />
-                <button onClick={() => this.deleteRating(index)}>Delete</button>
+                <Button onClick={() => this.deleteRating(index)}>Delete</Button>
             </div>
         );
 
@@ -185,9 +230,10 @@ class RateMoviesView extends Component {
                         onSuggestionSelected={this.onSuggestionSelected}
                         renderSuggestion={this.renderSuggestion}
                         inputProps={inputProps}
+                        theme={theme}
                     />
                     {rateMovieElement}
-                    <button onClick={this.submitRatings}>Finish</button>
+                    <Button onClick={this.submitRatings}>Finish</Button>
                     {ratedMoviesList}
                 </div>  :
                 <div>Loading...</div>            

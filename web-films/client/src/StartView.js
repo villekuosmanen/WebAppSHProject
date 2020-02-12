@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Button from 'react-bootstrap/Button';
+
 import './App.css';
 
 class StartView extends Component {
@@ -7,7 +9,7 @@ class StartView extends Component {
         return (
             <div>
                 <div>Welcome to the research platform!</div>
-                <button onClick={this.props.advanceView}>Continue</button>
+                <Button onClick={this.props.advanceView}>Continue</Button>
             </div>
         );
     }

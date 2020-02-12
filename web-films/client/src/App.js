@@ -35,6 +35,9 @@ class App extends Component {
         return (
             <div className="App">
                 {viewElement}
+                <div className="footer">
+                    Legal text and images
+                </div>
             </div>
         );
     }
