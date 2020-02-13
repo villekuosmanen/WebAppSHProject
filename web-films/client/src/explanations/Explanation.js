@@ -1,32 +1,21 @@
 import React, { Component } from 'react';
 
+import BasicExplanation from "./BasicExplanation";
+import AssociationRuleExplanation from "./AssociationRuleExplanation";
+import InfluenceExplanation from "./InfluenceExplanation";
+
 export default class Explanation extends Component {
 
     render() {
         if (this.props.explanation.type === 'A') {
-            return (
-                <div>
-                    This film was recommended because you are similar to users who liked it.
-                </div>
-            );
+            return <BasicExplanation />;
         } else if (this.props.explanation.type === 'B') {
-            return (
-                <div>
-                    <div>This film was recommended because you have rated the following films:</div>
-                    <div>
-                        {this.props.explanation.rule.map(obj => <div>{obj.title}</div>)}
-                    </div>
-                </div>
-            );
+            return <AssociationRuleExplanation 
+                explanation={this.props.explanation} 
+                recommendation_title={this.props.recommendation_title}
+            />;
         } else if (this.props.explanation.type === 'C') {
-            return (
-                <div>
-                    <div>The following films you have rated influenced the recommendation the most:</div>
-                    <div>
-                        {this.props.explanation.positives.map(obj => <div>{obj.title}</div>)}
-                    </div>
-                </div>
-            );
+            return <InfluenceExplanation explanation={this.props.explanation}/>;
         }
     }
 }

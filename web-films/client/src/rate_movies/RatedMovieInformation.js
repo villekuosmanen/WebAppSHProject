@@ -6,7 +6,7 @@ export default class RatedMovieInformation extends Component {
 
     render() {
         return(
-            <div className="container rated_movie_card">
+            <div className="container movie_card">
                 <div className="row">
                     <div className="col">
                         <img src={`https://image.tmdb.org/t/p/w92/${this.props.poster_path}`} alt={"Movie poster"} />
