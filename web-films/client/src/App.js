@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import StartView from './StartView';
-import RateMoviesView from './RateMoviesView';
-import RecommendationsView from './RecommendationsView';
+import RateMoviesView from './rate_movies/RateMoviesView';
+import RecommendationsView from './explanations/RecommendationsView';
 import EndView from './EndView';
 
 class App extends Component {

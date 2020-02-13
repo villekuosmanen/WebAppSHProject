@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import StarRatingComponent from 'react-star-rating-component';
 
-import './App.css';
-import Explanation from './explanations/Explanation.js'
+import './explanations.css';
+import Explanation from './Explanation.js'
 
 class RecommendationsView extends Component {
 

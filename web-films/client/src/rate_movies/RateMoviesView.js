@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import Autosuggest from 'react-autosuggest';
-import StarRatingComponent from 'react-star-rating-component';
 import Button from 'react-bootstrap/Button';
 
 import RateMovie from './RateMovie';
+import RatedMovieInformation from './RatedMovieInformation';
 import MovieInformation from './MovieInformation';
-import './App.css';
+import './rate_movies.css';
 
 class RateMoviesView extends Component {
 
@@ -128,6 +128,14 @@ class RateMoviesView extends Component {
         });
     }
 
+    onOldRatingChange = (index, rating) => {
+        const editRatedMovies = this.state.ratedMovies;
+        editRatedMovies[index].rating = rating;
+        this.setState({
+            ratedMovies: editRatedMovies
+        })
+    }
+
     submitRatings = () => {
         this.setState({loading: true});
         this.sendDataToServer()
@@ -203,16 +211,15 @@ class RateMoviesView extends Component {
         }
 
         const ratedMoviesList = this.state.ratedMovies.map((movie, index) => 
-            <div>
-                <span>{movie.title}</span>
-                <StarRatingComponent
-                        name={"Rating"}
-                        value={movie.rating}
-                        starCount={5}
-                        editing={false}
-                    />
-                <Button onClick={() => this.deleteRating(index)}>Delete</Button>
-            </div>
+            <RatedMovieInformation 
+                key={index}
+                index={index}
+                title={movie.title}
+                poster_path={movie.poster_path}
+                rating={movie.rating}
+                onOldRatingChange={this.onOldRatingChange}
+                deleteRating={this.deleteRating}
+            />
         );
 
         return (
@@ -232,7 +239,10 @@ class RateMoviesView extends Component {
                     {movieInformation}
                     {rateMovie}
                     <Button onClick={this.submitRatings}>Finish</Button>
-                    {ratedMoviesList}
+                    <div>
+                        <div>Your ratings: </div>
+                        {ratedMoviesList}
+                    </div>
                 </div>  :
                 <div>Loading...</div>            
         );
