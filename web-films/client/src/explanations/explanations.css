@@ -1,0 +1,38 @@
+.explanation-container {
+    margin-top: 15px;
+}
+
+@media screen and (min-width: 993px) {
+    .explanation-container {
+        border-left: thin solid #aaa;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .explanation-container {
+        border-top: thin solid #aaa;
+    }
+}
+
+.influence-subtitle {
+    width: 100%;
+}
+
+.influence-bar-negative {
+    background-color: #b80000;
+    float: right; 
+    height: 90%;
+    vertical-align: middle;
+}
+
+.influence-bar-positive {
+    background-color: #00b806;
+    float: left;
+    height: 90%;
+    vertical-align: middle;
+}
+
+.explanation-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}

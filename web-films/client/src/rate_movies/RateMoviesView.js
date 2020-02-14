@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Autosuggest from 'react-autosuggest';
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 import RateMovie from './RateMovie';
 import RatedMovieInformation from './RatedMovieInformation';
@@ -161,7 +164,6 @@ class RateMoviesView extends Component {
             onChange: this.onChange
         };
         const theme = {
-            container: 'autosuggest',
             input: 'react-autosuggest__input',
             suggestionsContainer: 'react-autosuggest__suggestions-container',
             suggestionsList: `dropdown-menu ${this.state.suggestions.length ? 'show' : ''}`,
@@ -174,20 +176,20 @@ class RateMoviesView extends Component {
         if (this.state.selection !== null) {
             if ((this.state.selection.ageRating === "18" || this.state.selection.ageRating === "R18")
                 && !this.props.adultMovies) {
-                movieInformation = <div class="container">
-                    <div class="row">
-                        <div className="col">
+                movieInformation = <Container className="autosuggest">
+                    <Row>
+                        <Col sm={4}>
                             <img src={'...'} alt={"No poster shown"} />
                             <div className="movie-age-rating">{this.state.selection.ageRating}</div>
-                        </div>
-                        <div className="col-8">
+                        </Col>
+                        <Col sm={8}>
                             <div className="movie-title">{this.state.selection.title}</div>
                             <div className="movie-description">
                                 This film is rated 18 or R18, and has been hidden due to your expressed preferences.
                             </div>
-                        </div>
-                    </div>
-                </div>;
+                        </Col>
+                    </Row>
+                </Container>;
             } else {
                 movieInformation = <MovieInformation
                     title={this.state.selection.title}
@@ -224,26 +226,34 @@ class RateMoviesView extends Component {
 
         return (
             !this.state.loading ?
-                <div>
-                    <div>Here, you can rate the movies you've seen lately</div>
-                    <Autosuggest
-                        suggestions={this.state.suggestions}
-                        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-                        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-                        getSuggestionValue={this.getSuggestionValue}
-                        onSuggestionSelected={this.onSuggestionSelected}
-                        renderSuggestion={this.renderSuggestion}
-                        inputProps={inputProps}
-                        theme={theme}
-                    />
-                    {movieInformation}
-                    {rateMovie}
-                    <Button onClick={this.submitRatings}>Finish</Button>
-                    <div>
-                        <div>Your ratings: </div>
-                        {ratedMoviesList}
-                    </div>
-                </div>  :
+                <Container>
+                    <Row>
+                        <h1 className="main-header" >Here, you can rate the movies you've seen lately</h1>
+                    </Row>
+                    <Row>
+                        <Col md={12} lg={7}>
+                            <Autosuggest
+                                suggestions={this.state.suggestions}
+                                onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                                onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                                getSuggestionValue={this.getSuggestionValue}
+                                onSuggestionSelected={this.onSuggestionSelected}
+                                renderSuggestion={this.renderSuggestion}
+                                inputProps={inputProps}
+                                theme={theme}
+                            />
+                            {movieInformation}
+                            {rateMovie}
+                            <Button className="finish-button" onClick={this.submitRatings}>Finish</Button>
+                        </Col>
+                        <Col className="your-ratings" md={12} lg={5}>
+                            <div>
+                                <div>Your ratings:</div>
+                                {ratedMoviesList}
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>  :
                 <div>Loading...</div>            
         );
     }

@@ -6,7 +6,7 @@ export default class AssociationRuleExplanation extends Component {
         return (
 
             <div>
-                <div>This film was recommended because you have rated the following films:</div>
+                <div className="explanation-title">This film was recommended because you have rated the following films:</div>
                 <div className="movie_card">
                     {this.props.explanation.rule.map((obj, index) => {
                         return <span>

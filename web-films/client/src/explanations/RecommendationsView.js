@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import StarRatingComponent from 'react-star-rating-component';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 import './explanations.css';
 import Explanation from './Explanation'
@@ -128,43 +132,62 @@ class RecommendationsView extends Component {
             />
         }
         return (
-            <div className="App">
-                {mainComponent}
-                {this.state.currentRecommendation === -1 ? null : 
-                    <Explanation 
-                        explanation={this.state.recommendations[this.state.currentRecommendation].explanation}
-                        recommendation_title={this.state.recommendations[this.state.currentRecommendation].title}
-                    />}
-                {this.state.currentRecommendation === -1
-                    ? null
-                    : <div><div>
-                        <span>I am interested in watching this film: </span>
-                        <StarRatingComponent
-                            name={"Interest"}
-                            value={this.state.interest}
-                            starCount={5}
-                            onStarClick={(nextValue, prevValue, name) => {
-                                this.setState({interest: nextValue})
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <span>I trust this recommendation: </span>
-                        <StarRatingComponent
-                            name={"Trust"}
-                            value={this.state.trust}
-                            starCount={5}
-                            onStarClick={(nextValue, prevValue, name) => {
-                                this.setState({trust: nextValue})
-                            }}
-                        />
-                    </div>
-                </div>}
+            <Container>
+                <Row>
+                    <h1 className="main-header" >Based on your ratings, we're recommending the following film:</h1>
+                </Row>
+                <Row>
+                    <Col md={12} lg={6}>
+                        {mainComponent}
+                    </Col>
+                    <Col className="explanation-container" md={12} lg={6}>
+                        {this.state.currentRecommendation === -1 ? null : 
+                            <Explanation 
+                                explanation={this.state.recommendations[this.state.currentRecommendation].explanation}
+                                recommendation_title={this.state.recommendations[this.state.currentRecommendation].title}
+                            />}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        {this.state.currentRecommendation === -1
+                            ? null
+                            : <div className="star-rating-row">
+                                <Row noGutters={true}>
+                                    <Col xs={6}>I am interested in watching this film: </Col>
+                                    <Col xs={6}>
+                                        <StarRatingComponent
+                                            name={"Interest"}
+                                            value={this.state.interest}
+                                            starCount={5}
+                                            onStarClick={(nextValue, prevValue, name) => {
+                                                this.setState({interest: nextValue})
+                                            }}
+                                        />
+                                    </Col>
+                                </Row>
+                                <Row noGutters={true}>
+                                    <Col xs={6}>I trust this recommendation: </Col>
+                                    <Col xs={6}>
+                                        <StarRatingComponent
+                                            name={"Trust"}
+                                            value={this.state.trust}
+                                            starCount={5}
+                                            onStarClick={(nextValue, prevValue, name) => {
+                                                this.setState({trust: nextValue})
+                                            }}
+                                        />
+                                    </Col>
+                                </Row>
+                            </div>
+                        }
+                    </Col>
+                </Row>
                 {this.state.interest !== 0 && this.state.trust !== 0
-                    ? <button onClick={this.rateFilm}>Continue</button> 
+                    ? <Button onClick={this.rateFilm}>Continue</Button> 
                     : null
                 }
-            </div>
+            </Container>
         );
     }
 }

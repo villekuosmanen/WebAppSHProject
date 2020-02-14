@@ -1,31 +1,34 @@
 import React, { Component } from 'react';
 import StarRatingComponent from 'react-star-rating-component';
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 export default class MovieInformation extends Component {
 
     render() {
         return(
-            <div className="container">
-                <div className="row">
-                    <div className="col">My rating: </div>
-                    <div className="col">
+            <Container>
+                <Row className="star-rating-row">
+                    <Col>My rating: </Col>
+                    <Col>
                         <StarRatingComponent
                             name={"Rating"}
                             value={this.props.rating}
                             starCount={5}
                             onStarClick={this.props.onRatingChange}
                         />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
                         {this.props.rating !== 0
                             ? <Button onClick={this.props.rateFilm}>Confirm</Button> 
-                            : <span />}
-                    </div>
-                </div>
-            </div>
+                            : null}
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }

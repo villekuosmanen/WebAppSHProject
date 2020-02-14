@@ -1,47 +1,56 @@
 import React, { Component } from 'react';
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 export default class InfluenceExplanation extends Component {
 
     render() {
         return (
             <div>
-                <div>The following films you have rated influenced the recommendation the most:</div>
-                <div className="movie_card">
+                <div className="explanation-title">The following films you have rated influenced the recommendation the most:</div>
+                <Container className="movie_card">
+                    <Row>
+                        <Col className="influence-subtitle">
+                            Most positive influence:
+                        </Col>
+                    </Row>
                     {this.props.explanation.positives.map(obj => 
-                        <div className="row">
-                            <div className="col-2" style={{paddingLeft: "0px", paddingRight: "0px"}}>
+                        <Row noGutters={true}>
+                            <Col xs={2}>
                                 {obj.influence < 0
-                                    ? <div style={{width: (obj.influence * -100) + "%", backgroundColor: "#b80000",
-                                        float: "right", height: "100%"}} />
+                                    ? <div className="influence-bar-negative" style={{width: (obj.influence * -100) + "%"}} />
                                     : null}
-                            </div>
-                            <div className="col-2" style={{paddingLeft: "0px", paddingRight: "0px"}}>
+                            </Col>
+                            <Col xs={2}>
                                 {obj.influence > 0
-                                    ? <div style={{width: (obj.influence * 100) + "%", backgroundColor: "#00b806", 
-                                        float: "left", height: "100%"}} />
+                                    ? <div className="influence-bar-positive" style={{width: (obj.influence * 100) + "%"}} />
                                     : null}
-                            </div>
-                            <div className="col-8 movie-title">{obj.title}</div>
-                        </div>
+                            </Col>
+                            <Col xs={8} className="movie-title">{obj.title}</Col>
+                        </Row>
                     )}
+                    <Row>
+                        <Col className="influence-subtitle">
+                            Most negative influence:
+                        </Col>
+                    </Row>
                     {this.props.explanation.negatives.map(obj => 
-                        <div className="row">
-                            <div className="col-2" style={{paddingLeft: "0px", paddingRight: "0px"}}>
+                        <Row noGutters={true}>
+                            <Col xs={2}>
                                 {obj.influence < 0
-                                    ? <div style={{width: (obj.influence * -100) + "%", backgroundColor: "#b80000",
-                                        float: "right", height: "100%"}} />
+                                    ? <div className="influence-bar-negative" style={{width: (obj.influence * -100) + "%"}} />
                                     : null}
-                            </div>
-                            <div className="col-2" style={{paddingLeft: "0px", paddingRight: "0px"}}>
+                            </Col>
+                            <Col xs={2}>
                                 {obj.influence > 0
-                                    ? <div style={{width: (obj.influence * 100) + "%", backgroundColor: "#00b806", 
-                                        float: "left", height: "100%"}} />
+                                    ? <div className="influence-bar-positive" style={{width: (obj.influence * 100) + "%"}} />
                                     : null}
-                            </div>
-                            <div className="col-8 movie-title">{obj.title}</div>
-                        </div>
+                            </Col>
+                            <Col xs={8} className="movie-title">{obj.title}</Col>
+                        </Row>
                     )}
-                </div>
+                </Container>
             </div>
         );
     }

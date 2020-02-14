@@ -4,7 +4,9 @@ export default class BasicExplanation extends Component {
     render() {
         return (
             <div>
-                This film was recommended because you are similar to users who liked it.
+                <div className="explanation-title">
+                    This film was recommended because you are similar to users who liked it.
+                </div>
             </div>
         );
     }
