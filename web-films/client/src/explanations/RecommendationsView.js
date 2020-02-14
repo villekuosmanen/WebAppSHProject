@@ -134,7 +134,7 @@ class RecommendationsView extends Component {
         return (
             <Container>
                 <Row>
-                    <h1 className="main-header" >Based on your ratings, we're recommending the following film:</h1>
+                    <h1 className="main-header" >Based on your ratings, we recommend the following film:</h1>
                 </Row>
                 <Row>
                     <Col md={12} lg={6}>
