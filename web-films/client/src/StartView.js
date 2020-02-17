@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 
 import './App.css';
 
@@ -40,14 +37,10 @@ class StartView extends Component {
                     Your participation is entirely voluntary, and you can withdraw at any time. You are free to omit any
                     question
                 </p>
-                <Container>
-                    <Row>
-                        <Col>Allow films that are rated "18" or "R18"</Col>
-                        <Col>
-                            <input type="checkbox" checked={this.props.adultMovies} onChange={this.onChange}/>
-                        </Col>
-                    </Row>                    
-                </Container>
+                <div className={"adult-film-preference-container"} >
+                        <span className={"adult-film-preference-text"} >Allow films that are rated "18" or "R18" by the BBFC: </span>
+                        <input type="checkbox" checked={this.props.adultMovies} onChange={this.onChange}/>
+                </div>
                 <Button onClick={this.props.advanceView}>Continue</Button>
             </div>
         );

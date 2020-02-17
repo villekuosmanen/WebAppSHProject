@@ -20,6 +20,7 @@ class RecommendationsView extends Component {
             currentRecommendation: -1,
             interest: 0,
             trust: 0,
+            continueEnabled: true,
         };
     }
 
@@ -43,6 +44,7 @@ class RecommendationsView extends Component {
                 };
                 this.setState({
                     recommendations: recs,
+                    continueEnabled: true,
                 });
             })
             .catch(err => console.log(err));
@@ -89,12 +91,16 @@ class RecommendationsView extends Component {
                     currentRecommendation: newMovieIndex,
                     interest: 0,
                     trust: 0,
+                    continueEnabled: true,
                 });
             })
             .catch(err => {
                 console.log(err)
                 this.setState({
                     currentRecommendation: this.state.currentRecommendation + 1,
+                    interest: 0,
+                    trust: 0,
+                    continueEnabled: true,
                 });
             });
     }
@@ -105,6 +111,7 @@ class RecommendationsView extends Component {
             this.sendDataToServer()
                 .then(() => this.props.advanceView());
         } else {
+            this.setState({continueEnabled: false})
             this.incrementFilm();
         }
     };
@@ -188,7 +195,7 @@ class RecommendationsView extends Component {
                     </Col>
                 </Row>
                 {this.state.interest !== 0 && this.state.trust !== 0
-                    ? <Button onClick={this.rateFilm}>Continue</Button> 
+                    ? <Button onClick={this.rateFilm} disabled={!this.state.continueEnabled}>Continue</Button> 
                     : null
                 }
             </Container>

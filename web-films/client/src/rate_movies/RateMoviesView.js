@@ -54,9 +54,13 @@ class RateMoviesView extends Component {
         const inputValue = value.trim().toLowerCase();
         const inputLength = inputValue.length;
        
-        return inputLength === 0 ? [] : this.state.availableMovies.filter(movie =>
-            movie.title.toLowerCase().slice(0, inputLength) === inputValue
-        );
+        return inputLength === 0 ? [] : this.state.availableMovies.filter(movie => {
+            if (inputLength > 4 && movie.title.toLowerCase().includes("the")) {
+                return movie.title.toLowerCase().slice(0, inputLength) === inputValue ||
+                    "the " + movie.title.toLowerCase().slice(0, inputLength - 4) === inputValue;
+            }
+            return movie.title.toLowerCase().slice(0, inputLength) === inputValue
+        });
     };
 
     getSuggestionValue = suggestion => suggestion.title;

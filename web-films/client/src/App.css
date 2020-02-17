@@ -27,3 +27,12 @@ footer {
     padding-left: 10px;
     border-top: thin solid #aaa;
 }
+
+.adult-film-preference-container {
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+.adult-film-preference-text {
+    padding-right: 10px;
+}
