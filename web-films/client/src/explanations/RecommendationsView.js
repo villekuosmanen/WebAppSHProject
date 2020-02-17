@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import BounceLoader from "react-spinners/BounceLoader";
 
 import './explanations.css';
 import Explanation from './Explanation'
@@ -122,7 +123,10 @@ class RecommendationsView extends Component {
     render() {
         let mainComponent = null;
         if (this.state.currentRecommendation === -1) {
-            mainComponent = <div>Loading...</div>;
+            mainComponent = <div style={{ position: "fixed", left: "50%", transform: "translateX(-50%)" }} >
+                <div>Loading...</div>
+                <BounceLoader size={150} />
+            </div>;
         } else {
             mainComponent = <MovieInformation 
                 title={this.state.recommendations[this.state.currentRecommendation].title}

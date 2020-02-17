@@ -42,10 +42,14 @@ class App extends Component {
         }
         return (
             <div className="App">
-                {viewElement}
-                <div className="footer">
-                    Legal text and images
+                <div className="App">
+                    {viewElement}
                 </div>
+                <footer className="footer">
+                    <img src={"st_andrews_logo.png"} alt={"University of St Andrews Logo"} height={"88px"} width={"200px"} />
+                    <img src={"tmdb_logo.png"} alt={"The Movie Database Logo"} height={"85px"} width={"82px"} />
+                    <p>This product uses the TMDb API but is not endorsed or certified by TMDb.</p>
+                </footer>
             </div>
         );
     }

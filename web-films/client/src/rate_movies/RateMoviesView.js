@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import BounceLoader from "react-spinners/BounceLoader";
 
 import RateMovie from './RateMovie';
 import RatedMovieInformation from './RatedMovieInformation';
@@ -254,7 +255,12 @@ class RateMoviesView extends Component {
                         </Col>
                     </Row>
                 </Container>  :
-                <div>Loading...</div>            
+                <div>
+                    <div>Loading...</div>
+                    <div style={{ position: "fixed", left: "50%", transform: "translateX(-50%)" }} >
+                        <BounceLoader size={150} />
+                    </div>
+                </div>            
         );
     }
 }
