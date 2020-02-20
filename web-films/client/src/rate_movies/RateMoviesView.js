@@ -181,26 +181,18 @@ class RateMoviesView extends Component {
         if (this.state.selection !== null) {
             if ((this.state.selection.ageRating === "18" || this.state.selection.ageRating === "R18")
                 && !this.props.adultMovies) {
-                movieInformation = <Container className="autosuggest">
-                    <Row>
-                        <Col sm={4}>
-                            <img src={'...'} alt={"No poster shown"} />
-                            <div className="movie-age-rating">{this.state.selection.ageRating}</div>
-                        </Col>
-                        <Col sm={8}>
-                            <div className="movie-title">{this.state.selection.title}</div>
-                            <div className="movie-description">
-                                This film is rated 18 or R18, and has been hidden due to your expressed preferences.
-                            </div>
-                        </Col>
-                    </Row>
-                </Container>;
+                movieInformation = <MovieInformation
+                    title={this.state.selection.title}
+                    ageRating={this.state.selection.ageRating}
+                    forbidden={true}
+                />;
             } else {
                 movieInformation = <MovieInformation
                     title={this.state.selection.title}
                     description={this.state.selection.description}
                     ageRating={this.state.selection.ageRating}
                     poster_path={this.state.selection.poster_path}
+                    forbidden={false}
                 />;
                 rateMovie = <RateMovie 
                     rating={this.state.selection.rating}

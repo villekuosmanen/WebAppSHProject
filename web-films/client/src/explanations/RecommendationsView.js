@@ -21,6 +21,7 @@ class RecommendationsView extends Component {
             interest: 0,
             trust: 0,
             continueEnabled: true,
+            forbidden: false,
         };
     }
 
@@ -29,11 +30,9 @@ class RecommendationsView extends Component {
             .then(res => this.setState({ recommendations: res, currentRecommendation: 0 }))
             .then(() => this.getMovieDetails(this.state.recommendations[this.state.currentRecommendation].movieId))
             .then(res => {
+                let forbidden = false;
                 if ((res.age_rating === "18" || res.age_rating === "R18") && !this.props.adultMovies) {
-                    this.setState({
-                        currentRecommendation: this.state.currentRecommendation + 1,
-                    });
-                    return;
+                    forbidden = true;
                 }
                 const recs = this.state.recommendations;
                 recs[this.state.currentRecommendation] = {
@@ -45,6 +44,7 @@ class RecommendationsView extends Component {
                 this.setState({
                     recommendations: recs,
                     continueEnabled: true,
+                    forbidden,
                 });
             })
             .catch(err => console.log(err));
@@ -73,11 +73,9 @@ class RecommendationsView extends Component {
         const newMovieIndex = this.state.currentRecommendation + 1;
         this.getMovieDetails(recs[newMovieIndex].movieId)
             .then(res => {
+                let forbidden = false;
                 if ((res.age_rating === "18" || res.age_rating === "R18") && !this.props.adultMovies) {
-                    this.setState({
-                        currentRecommendation: newMovieIndex,
-                    }).then(() => this.incrementFilm());
-                    return;
+                    forbidden = true;
                 }
                 const recs = this.state.recommendations;
                 recs[newMovieIndex] = {
@@ -92,6 +90,7 @@ class RecommendationsView extends Component {
                     interest: 0,
                     trust: 0,
                     continueEnabled: true,
+                    forbidden,
                 });
             })
             .catch(err => {
@@ -106,7 +105,9 @@ class RecommendationsView extends Component {
     }
 
     rateFilm = () => {
-        this.state.responses.push({interest: this.state.interest, trust: this.state.trust});
+        if (!this.state.forbidden) {
+            this.state.responses.push({interest: this.state.interest, trust: this.state.trust});
+        }
         if (this.state.currentRecommendation === this.state.recommendations.length - 1) {
             this.sendDataToServer()
                 .then(() => this.props.advanceView());
@@ -140,6 +141,7 @@ class RecommendationsView extends Component {
                 description={this.state.recommendations[this.state.currentRecommendation].description}
                 ageRating={this.state.recommendations[this.state.currentRecommendation].ageRating}
                 poster_path={this.state.recommendations[this.state.currentRecommendation].poster_path}
+                forbidden={this.state.forbidden}
             />
         }
         return (
@@ -152,7 +154,7 @@ class RecommendationsView extends Component {
                         {mainComponent}
                     </Col>
                     <Col className="explanation-container" md={12} lg={6}>
-                        {this.state.currentRecommendation === -1 ? null : 
+                        {(this.state.currentRecommendation === -1 || this.state.forbidden) ? null : 
                             <Explanation 
                                 explanation={this.state.recommendations[this.state.currentRecommendation].explanation}
                                 recommendation_title={this.state.recommendations[this.state.currentRecommendation].title}
@@ -161,7 +163,7 @@ class RecommendationsView extends Component {
                 </Row>
                 <Row>
                     <Col>
-                        {this.state.currentRecommendation === -1
+                        {(this.state.currentRecommendation === -1 || this.state.forbidden)
                             ? null
                             : <div className="star-rating-row">
                                 <Row noGutters={true}>
@@ -194,7 +196,7 @@ class RecommendationsView extends Component {
                         }
                     </Col>
                 </Row>
-                {this.state.interest !== 0 && this.state.trust !== 0
+                {(this.state.interest !== 0 && this.state.trust !== 0) || this.state.forbidden
                     ? <Button onClick={this.rateFilm} disabled={!this.state.continueEnabled}>Continue</Button> 
                     : null
                 }
