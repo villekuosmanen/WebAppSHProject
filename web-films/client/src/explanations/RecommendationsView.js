@@ -53,8 +53,13 @@ class RecommendationsView extends Component {
     getMovieDetails = async (movieId) => {
         const response = await fetch(`/movies/details/${movieId}`);
         const body = await response.json();
-        console.log(body.details)
-        if (response.status !== 200) throw Error(body.message);
+        if (response.status === 404) {
+            console.log("404 error");
+            // Do nothing
+        } else if (response.status === 500) {
+            console.log("500 error");
+            // Do nothing
+        }
     
         return body;
     };
@@ -62,8 +67,10 @@ class RecommendationsView extends Component {
     getRecommendations = async () => {
         const response = await fetch(`/recommendations/${this.props.userId}/recommendations`);
         const body = await response.json();
-        console.log(body.recommendations)
-        if (response.status !== 200) throw Error(body.message);
+        if (response.status === 500) {
+            console.log("500 error");
+            this.props.render500ErrorPage();
+        }
     
         return body.recommendations;
     };
@@ -109,24 +116,13 @@ class RecommendationsView extends Component {
             this.state.responses.push({interest: this.state.interest, trust: this.state.trust});
         }
         if (this.state.currentRecommendation === this.state.recommendations.length - 1) {
-            this.sendDataToServer()
-                .then(() => this.props.advanceView());
+            this.props.saveResponses(this.state.responses);
+            this.props.advanceView();
         } else {
             this.setState({continueEnabled: false})
             this.incrementFilm();
         }
     };
-
-    sendDataToServer = async () => {
-        const response = await fetch(`/recommendations/${this.props.userId}/responses`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({response: this.state.responses}),
-        });
-        if (response.status !== 200) throw Error("Post failed");
-    }
     
     render() {
         let mainComponent = null;

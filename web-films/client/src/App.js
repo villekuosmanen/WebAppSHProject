@@ -4,6 +4,8 @@ import StartView from './StartView';
 import RateMoviesView from './rate_movies/RateMoviesView';
 import RecommendationsView from './explanations/RecommendationsView';
 import EndView from './EndView';
+import ThankYouView from './ThankYouView'
+import FatalErrorView from './FatalErrorView'
 
 class App extends Component {
 
@@ -15,6 +17,8 @@ class App extends Component {
             view: 0,
             userId: userId,
             adultMovies: true,
+            render500ErrorPage: false,
+            responses: null,
         };
     }
 
@@ -26,19 +30,36 @@ class App extends Component {
         this.setState({adultMovies: !this.state.adultMovies});
     }
 
+    render500ErrorPage = () => {
+        this.setState({render500ErrorPage: true});
+    }
+
+    restartStudy = () => {
+        this.setState({view: 0, adultMovies: true, render500ErrorPage: false});
+    }
+
+    saveResponses = (responses) => {
+        this.setState({responses: responses});
+    }
+
     render() {
         let viewElement;
-        if (this.state.view === 0) {
+        if (this.state.render500ErrorPage) {
+            viewElement = <FatalErrorView restartStudy={this.restartStudy} />
+        }
+        else if (this.state.view === 0) {
             viewElement = <StartView advanceView={this.advanceView} adultMovies={this.state.adultMovies} 
                 toggleAdultMovies={this.toggleAdultMovies} />
         } else if (this.state.view === 1) {
-            viewElement = <RateMoviesView advanceView={this.advanceView} userId={this.state.userId}
-                adultMovies={this.state.adultMovies} />
+            viewElement = <RateMoviesView advanceView={this.advanceView} userId={this.state.userId} 
+                render500ErrorPage={this.render500ErrorPage} adultMovies={this.state.adultMovies} />
         } else if (this.state.view === 2) {
-            viewElement = <RecommendationsView advanceView={this.advanceView} 
-                userId={this.state.userId} adultMovies={this.state.adultMovies} />
+            viewElement = <RecommendationsView advanceView={this.advanceView} userId={this.state.userId}
+                render500ErrorPage={this.render500ErrorPage} adultMovies={this.state.adultMovies} saveResponses={this.saveResponses} />
         } else if (this.state.view === 3) {
-            viewElement = <EndView/>
+            viewElement = <EndView advanceView={this.advanceView} userId={this.state.userId} responses={this.state.responses} />
+        } else if (this.state.view === 4) {
+            viewElement = <ThankYouView />
         }
         return (
             <div className="App">

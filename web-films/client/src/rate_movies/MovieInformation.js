@@ -11,7 +11,7 @@ export default class MovieInformation extends Component {
                 <Container>
                     <Row noGutters={true}>
                         <Col xs={4}>
-                        <img src={'...'} alt={"No poster shown"} />
+                        <img alt={"No poster shown"} />
                             <div className="movie-age-rating">{this.props.ageRating}</div>
                         </Col>
                         <Col xs={8}>

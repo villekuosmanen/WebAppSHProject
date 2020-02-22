@@ -36,7 +36,11 @@ class RateMoviesView extends Component {
         const response = await fetch('/movies');
         const body = await response.json();
         console.log(body.movies)
-        if (response.status !== 200) throw Error(body.message);
+        
+        if (response.status === 500) {
+            console.log("500 error");
+            this.props.render500ErrorPage();
+        }
     
         return body.movies;
     };
@@ -44,8 +48,13 @@ class RateMoviesView extends Component {
     getMovieDetails = async (movieId) => {
         const response = await fetch(`/movies/details/${movieId}`);
         const body = await response.json();
-        console.log(body.details)
-        if (response.status !== 200) throw Error(body.message);
+        if (response.status === 404) {
+            console.log("404 error");
+            // Do nothing
+        } else if (response.status === 500) {
+            console.log("500 error");
+            // Do nothing
+        }
     
         return body;
     };
@@ -158,7 +167,10 @@ class RateMoviesView extends Component {
             },
             body: JSON.stringify({response: this.state.ratedMovies}),
         });
-        if (response.status !== 200) throw Error("Post failed");
+        if (response.status === 500) {
+            console.log("500 error");
+            this.props.render500ErrorPage();
+        }
     }
 
     render() { 
@@ -225,7 +237,7 @@ class RateMoviesView extends Component {
             !this.state.loading ?
                 <Container>
                     <Row>
-                        <h1 className="main-header" >Here, you can rate the movies you've seen lately</h1>
+                        <h1 className="main-header" >Here, you can rate the movies you've seen. Rate a minimum of 10 movies.</h1>
                     </Row>
                     <Row>
                         <Col md={12} lg={7}>
@@ -241,7 +253,9 @@ class RateMoviesView extends Component {
                             />
                             {movieInformation}
                             {rateMovie}
-                            <Button className="finish-button" onClick={this.submitRatings}>Finish</Button>
+                            {this.state.ratedMovies.length >= 1 
+                                ? <Button className="finish-button" onClick={this.submitRatings}>Finish</Button>
+                                : null}
                         </Col>
                         <Col className="your-ratings" md={12} lg={5}>
                             <div>
