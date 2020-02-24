@@ -33,7 +33,7 @@ class RateMoviesView extends Component {
     }
 
     getMoviesList = async () => {
-        const response = await fetch('/movies');
+        const response = await fetch('survey/movies');
         const body = await response.json();
         console.log(body.movies)
         
@@ -46,7 +46,7 @@ class RateMoviesView extends Component {
     };
 
     getMovieDetails = async (movieId) => {
-        const response = await fetch(`/movies/details/${movieId}`);
+        const response = await fetch(`survey/movies/details/${movieId}`);
         const body = await response.json();
         if (response.status === 404) {
             console.log("404 error");
@@ -160,7 +160,7 @@ class RateMoviesView extends Component {
     }
 
     sendDataToServer = async () => {
-        const response = await fetch(`/movies/${this.props.userId}/responses`, {
+        const response = await fetch(`survey/movies/${this.props.userId}/responses`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

@@ -51,7 +51,7 @@ class RecommendationsView extends Component {
     }
 
     getMovieDetails = async (movieId) => {
-        const response = await fetch(`/movies/details/${movieId}`);
+        const response = await fetch(`survey/movies/details/${movieId}`);
         const body = await response.json();
         if (response.status === 404) {
             console.log("404 error");
@@ -65,7 +65,7 @@ class RecommendationsView extends Component {
     };
     
     getRecommendations = async () => {
-        const response = await fetch(`/recommendations/${this.props.userId}/recommendations`);
+        const response = await fetch(`survey/recommendations/${this.props.userId}/recommendations`);
         const body = await response.json();
         if (response.status === 500) {
             console.log("500 error");

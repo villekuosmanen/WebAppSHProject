@@ -15,7 +15,7 @@ class EndView extends Component {
     }
 
     sendResponsesToServer = async () => {
-        const response = await fetch(`/recommendations/${this.props.userId}/responses`, {
+        const response = await fetch(`survey/recommendations/${this.props.userId}/responses`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ class EndView extends Component {
     }
 
     submitEmail = async () => {
-        const response = await fetch(`/emails`, {
+        const response = await fetch(`survey/emails`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
