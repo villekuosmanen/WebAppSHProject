@@ -11,11 +11,8 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-        // TODO get this from back-end
-        const userId = 19546801
         this.state = {
             view: 0,
-            userId: userId,
             adultMovies: true,
             render500ErrorPage: false,
             responses: null,
@@ -42,22 +39,42 @@ class App extends Component {
         this.setState({responses: responses});
     }
 
+    saveRecommendations = (recommendations) => {
+        this.setState({recommendations: recommendations});
+    }
+
     render() {
         let viewElement;
         if (this.state.render500ErrorPage) {
             viewElement = <FatalErrorView restartStudy={this.restartStudy} />
         }
         else if (this.state.view === 0) {
-            viewElement = <StartView advanceView={this.advanceView} adultMovies={this.state.adultMovies} 
-                toggleAdultMovies={this.toggleAdultMovies} />
+            viewElement = <StartView
+                advanceView={this.advanceView}
+                adultMovies={this.state.adultMovies} 
+                toggleAdultMovies={this.toggleAdultMovies}
+            />
         } else if (this.state.view === 1) {
-            viewElement = <RateMoviesView advanceView={this.advanceView} userId={this.state.userId} 
-                render500ErrorPage={this.render500ErrorPage} adultMovies={this.state.adultMovies} />
+            viewElement = <RateMoviesView 
+                advanceView={this.advanceView}
+                render500ErrorPage={this.render500ErrorPage} 
+                adultMovies={this.state.adultMovies}
+                saveRecommendations={this.saveRecommendations}
+            />
         } else if (this.state.view === 2) {
-            viewElement = <RecommendationsView advanceView={this.advanceView} userId={this.state.userId}
-                render500ErrorPage={this.render500ErrorPage} adultMovies={this.state.adultMovies} saveResponses={this.saveResponses} />
+            viewElement = <RecommendationsView 
+                advanceView={this.advanceView}
+                recommendations={this.state.recommendations}
+                render500ErrorPage={this.render500ErrorPage} 
+                adultMovies={this.state.adultMovies} 
+                saveResponses={this.saveResponses} 
+            />
         } else if (this.state.view === 3) {
-            viewElement = <EndView advanceView={this.advanceView} userId={this.state.userId} responses={this.state.responses} />
+            viewElement = <EndView 
+                advanceView={this.advanceView}
+                responses={this.state.responses}
+                render500ErrorPage={this.render500ErrorPage} 
+            />
         } else if (this.state.view === 4) {
             viewElement = <ThankYouView />
         }

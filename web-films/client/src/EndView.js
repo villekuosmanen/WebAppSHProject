@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 
 import './App.css';
@@ -15,14 +12,17 @@ class EndView extends Component {
     }
 
     sendResponsesToServer = async () => {
-        const response = await fetch(`survey/recommendations/${this.props.userId}/responses`, {
+        const response = await fetch(`survey/recommendations/responses`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({response: this.props.responses}),
         });
-        if (response.status !== 200) throw Error("Post failed");
+        if (response.status === 500) {
+            console.log("500 error");
+            this.props.render500ErrorPage()
+        }
     }
 
     handleChange = event => {
@@ -67,7 +67,7 @@ class EndView extends Component {
                 <Form onSubmit={this.handleSubmit} >
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" 
+                        <Form.Control type="text" placeholder="Enter email" 
                             value={this.state.value} onChange={this.handleChange} />
                     </Form.Group>
                     <Button variant="primary" type="submit">

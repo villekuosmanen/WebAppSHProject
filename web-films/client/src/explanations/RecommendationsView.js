@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import BounceLoader from "react-spinners/BounceLoader";
 
 import './explanations.css';
 import Explanation from './Explanation'
@@ -15,9 +14,9 @@ class RecommendationsView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            recommendations: [],
+            recommendations: this.props.recommendations,
             responses: [],
-            currentRecommendation: -1,
+            currentRecommendation: 0,
             interest: 0,
             trust: 0,
             continueEnabled: true,
@@ -26,9 +25,7 @@ class RecommendationsView extends Component {
     }
 
     componentDidMount() {
-        this.getRecommendations()
-            .then(res => this.setState({ recommendations: res, currentRecommendation: 0 }))
-            .then(() => this.getMovieDetails(this.state.recommendations[this.state.currentRecommendation].movieId))
+        this.getMovieDetails(this.state.recommendations[this.state.currentRecommendation].movieId)
             .then(res => {
                 let forbidden = false;
                 if ((res.age_rating === "18" || res.age_rating === "R18") && !this.props.adultMovies) {
@@ -113,7 +110,14 @@ class RecommendationsView extends Component {
 
     rateFilm = () => {
         if (!this.state.forbidden) {
-            this.state.responses.push({interest: this.state.interest, trust: this.state.trust});
+            const hasDetails = this.state.recommendations[this.state.currentRecommendation].poster_path !== undefined &&
+                this.state.recommendations[this.state.currentRecommendation].poster_path !== "";
+            this.state.responses.push({
+                interest: this.state.interest,
+                trust: this.state.trust,
+                type: this.state.recommendations[this.state.currentRecommendation].explanation.type,
+                hasDetails,
+            });
         }
         if (this.state.currentRecommendation === this.state.recommendations.length - 1) {
             this.props.saveResponses(this.state.responses);
@@ -125,21 +129,6 @@ class RecommendationsView extends Component {
     };
     
     render() {
-        let mainComponent = null;
-        if (this.state.currentRecommendation === -1) {
-            mainComponent = <div style={{ position: "fixed", left: "50%", transform: "translateX(-50%)" }} >
-                <div>Loading...</div>
-                <BounceLoader size={150} />
-            </div>;
-        } else {
-            mainComponent = <MovieInformation 
-                title={this.state.recommendations[this.state.currentRecommendation].title}
-                description={this.state.recommendations[this.state.currentRecommendation].description}
-                ageRating={this.state.recommendations[this.state.currentRecommendation].ageRating}
-                poster_path={this.state.recommendations[this.state.currentRecommendation].poster_path}
-                forbidden={this.state.forbidden}
-            />
-        }
         return (
             <Container>
                 <Row>
@@ -147,11 +136,18 @@ class RecommendationsView extends Component {
                 </Row>
                 <Row>
                     <Col md={12} lg={6}>
-                        {mainComponent}
+                        <MovieInformation 
+                            title={this.state.recommendations[this.state.currentRecommendation].title}
+                            description={this.state.recommendations[this.state.currentRecommendation].description}
+                            ageRating={this.state.recommendations[this.state.currentRecommendation].ageRating}
+                            poster_path={this.state.recommendations[this.state.currentRecommendation].poster_path}
+                            forbidden={this.state.forbidden}
+                        />
                     </Col>
                     <Col className="explanation-container" md={12} lg={6}>
-                        {(this.state.currentRecommendation === -1 || this.state.forbidden) ? null : 
-                            <Explanation 
+                        {this.state.forbidden 
+                            ? null
+                            : <Explanation 
                                 explanation={this.state.recommendations[this.state.currentRecommendation].explanation}
                                 recommendation_title={this.state.recommendations[this.state.currentRecommendation].title}
                             />}
@@ -159,7 +155,7 @@ class RecommendationsView extends Component {
                 </Row>
                 <Row>
                     <Col>
-                        {(this.state.currentRecommendation === -1 || this.state.forbidden)
+                        {this.state.forbidden
                             ? null
                             : <div className="star-rating-row">
                                 <Row noGutters={true}>

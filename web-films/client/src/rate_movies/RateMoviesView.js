@@ -156,11 +156,15 @@ class RateMoviesView extends Component {
     submitRatings = () => {
         this.setState({loading: true});
         this.sendDataToServer()
-            .then(() => this.props.advanceView());
+            .then((body) => {
+                this.props.saveRecommendations(body.recommendations);
+                this.props.advanceView();
+            }
+        );
     }
 
     sendDataToServer = async () => {
-        const response = await fetch(`survey/movies/${this.props.userId}/responses`, {
+        const response = await fetch(`survey/movies/movie-ratings`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -170,6 +174,8 @@ class RateMoviesView extends Component {
         if (response.status === 500) {
             console.log("500 error");
             this.props.render500ErrorPage();
+        } else {
+            return await response.json();
         }
     }
 
@@ -266,7 +272,7 @@ class RateMoviesView extends Component {
                     </Row>
                 </Container>  :
                 <div>
-                    <div>Loading...</div>
+                    <div>Generating recommendations... This may take a few minutes.</div>
                     <div style={{ position: "fixed", left: "50%", transform: "translateX(-50%)" }} >
                         <BounceLoader size={150} />
                     </div>
