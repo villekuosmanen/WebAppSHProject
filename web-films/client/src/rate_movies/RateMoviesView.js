@@ -259,7 +259,7 @@ class RateMoviesView extends Component {
                             />
                             {movieInformation}
                             {rateMovie}
-                            {this.state.ratedMovies.length >= 1 
+                            {this.state.ratedMovies.length >= 10
                                 ? <Button className="finish-button" onClick={this.submitRatings}>Finish</Button>
                                 : null}
                         </Col>
