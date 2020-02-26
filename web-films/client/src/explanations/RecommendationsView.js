@@ -154,6 +154,12 @@ class RecommendationsView extends Component {
                     </Col>
                 </Row>
                 <Row>
+                    {this.state.forbidden
+                        ? null
+                        : <h1 className="main-header" >Please rate this recommendation based on the following statements:</h1>
+                    }
+                </Row>
+                <Row>
                     <Col>
                         {this.state.forbidden
                             ? null

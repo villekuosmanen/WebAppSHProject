@@ -26,7 +26,7 @@ class StartView extends Component {
                     system you used. Completing the study is expected to take around 10 minutes of your time. After
                     completing the study you will have a chance to win a £50 Amazon voucher by submitting your
                     email address. Further details, including information about data protection, are available in the
-                    participant information sheet that you can download here [provide download link].
+                    participant information sheet that you can download <a href={process.env.PUBLIC_URL + "/participant-information-sheet.pdf"} download>here</a>.
                 </p>
                 <p>
                     If you are interested in taking part, please read the participant information sheet and keep a copy
