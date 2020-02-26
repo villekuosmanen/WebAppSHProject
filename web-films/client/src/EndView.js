@@ -59,6 +59,9 @@ class EndView extends Component {
                     By clicking the ‘Submit’ button below, you are consenting to participate in this study, as it is described in the participant information sheet, which you can download <a href={process.env.PUBLIC_URL + "/participant-information-sheet.pdf"} download>here</a>. If you did not yet download and keep a copy of this document for your records, we recommend you do that now.
                 </p>
                 <p>
+                    By submitting your response you agree to only participate once in the survey. Once the survey is complete, you should not redo the study.
+                </p>
+                <p>
                     You can also participate in the £50 Amazon voucher raffle by filling in your email address. It will not be shared with anyone.
                 </p>
                 <Form onSubmit={this.handleSubmit} >
